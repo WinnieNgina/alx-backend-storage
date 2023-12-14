@@ -1,7 +1,7 @@
 -- Create a trigger to decrease quantity after adding a new order
 DELIMITER //
 CREATE TRIGGER decrease_quantity
-AFTER INSERT ON order
+AFTER INSERT ON orders
 FOR EACH ROW
 BEGIN
     UPDATE items
