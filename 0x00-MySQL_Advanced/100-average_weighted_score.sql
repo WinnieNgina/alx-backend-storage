@@ -7,7 +7,7 @@ BEGIN
             SUM(c.score * p.weight) / SUM(p.weight)
         FROM 
             corrections c
-        JOIN 
+        INNER JOIN 
             projects p ON p.id = c.project_id
         WHERE 
             c.user_id = user_id
