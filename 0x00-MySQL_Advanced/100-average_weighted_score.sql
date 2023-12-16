@@ -1,3 +1,4 @@
+-- created a procedure tto compute avg weighted score
 DELIMITER //
 CREATE PROCEDURE ComputeAverageWeightedScoreForUser(IN user_id INT)
 BEGIN
