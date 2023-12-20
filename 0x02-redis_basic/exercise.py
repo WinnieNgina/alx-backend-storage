@@ -5,11 +5,22 @@ Cache class
 import redis
 import uuid
 from typing import Union, Optional, Callable
+from functools import wraps
 
 
 def decode_utf8(data):
     """Converts bytes too strings"""
     return data.decode("utf-8")
+
+
+def count_calls(method: Callable) -> Callable:
+    """Decorator to count the number of calls to a method"""
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        key = method.__qualname__
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -18,6 +29,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Generates key and stores data in db"""
         key = str(uuid.uuid4())

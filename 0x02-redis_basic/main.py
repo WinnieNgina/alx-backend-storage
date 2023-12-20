@@ -1,32 +1,14 @@
 #!/usr/bin/env python3
-"""
-Main file
-"""
-import redis
+""" Main file """
 
 Cache = __import__('exercise').Cache
 
-def main():
-    cache = Cache()
+cache = Cache()
 
-    data = b"hello"
-    key = cache.store(data)
-    print(key)
+cache.store(b"first")
+print(cache.get(cache.store.__qualname__))
 
-    local_redis = redis.Redis()
-    print(local_redis.get(key))
-
-    # Additional test cases
-    TEST_CASES = {
-        b"foo": None,
-        123: int,
-        "bar": lambda d: d.decode("utf-8")
-    }
-
-    for value, fn in TEST_CASES.items():
-        key = cache.store(value)
-        assert cache.get(key, fn=fn) == value
-
-if __name__ == "__main__":
-    main()
+cache.store(b"second")
+cache.store(b"third")
+print(cache.get(cache.store.__qualname__))
 
