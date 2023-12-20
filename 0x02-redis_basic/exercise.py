@@ -9,7 +9,7 @@ from functools import wraps
 
 
 def decode_utf8(data):
-    """Converts bytes to strings"""
+    """Converts bytes too strings"""
     return data.decode("utf-8")
 
 
@@ -37,23 +37,6 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 
-def replay(method: Callable):
-    """Displays history of a method"""
-    @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        key = method.__qualname__
-        inputs = self._redis.lrange(f"{key}:inputs", 0, -1)
-        outputs = self._redis.lrange(f"{key}:outputs", 0, -1)
-        print(f"{key} was called {len(inputs)} times:")
-        for input, output in zip(inputs, outputs):
-            input_str = input.decode('utf-8')
-            output_str = output.decode('utf-8')
-            print(f"{key}{input_str} -> {output_str}")
-        return method(self, *args, **kwargs)
-
-    return wrapper
-
-
 class Cache:
     def __init__(self):
         """creates a connection with db and clears cache"""
@@ -62,7 +45,6 @@ class Cache:
 
     @count_calls
     @call_history
-    @replay
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Generates key and stores data in db"""
         key = str(uuid.uuid4())
@@ -86,4 +68,3 @@ class Cache:
     def get_int(self, key: int) -> Optional[int]:
         """Retrieves data from db as int"""
         return self.get(key, fn=int)
-
