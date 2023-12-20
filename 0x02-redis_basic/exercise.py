@@ -76,6 +76,6 @@ class Cache:
         outputs = method.__self__.redis.lrange(f"{key}:outputs", 0, -1)
         print(f"{key} was called {len(inputs)} times:")
         for input, output in zip(inputs, outputs):
-        input_str = input.decode('utf-8')
-        output_str = output.decode('utf-8')
-        print(f"{key}{input_str} -> {output_str}")
+            input_str = input.decode('utf-8')
+            output_str = output.decode('utf-8')
+            print(f"{key}{input_str} -> {output_str}")
