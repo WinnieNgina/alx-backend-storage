@@ -10,6 +10,7 @@ from typing import Union, Optional, Callable
 def decode_utf8(data):
     return data.decode("utf-8")
 
+
 class Cache:
     def __init__(self):
         """creates a connection with db and clears cache"""
@@ -22,7 +23,8 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float, None]:
+    def get(self, key: str, fn: Optional[Callable] = None) ->
+    Union[str, bytes, int, float, None]:
         """Retrieves data from db and calls function if provided"""
         data = self._redis.get(key)
         if data is None:
@@ -39,4 +41,3 @@ class Cache:
     def get_int(self, key: int) -> Optional[int]:
         """Retrieves data from db as int"""
         result self.get(key, fn=int)
-
