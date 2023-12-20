@@ -68,3 +68,12 @@ class Cache:
     def get_int(self, key: int) -> Optional[int]:
         """Retrieves data from db as int"""
         return self.get(key, fn=int)
+
+    def replay(self, func):
+        """Retrieve the call history from Redis"""
+        call_history = self.redis_client.lrange(self.call_history_key, 0, -1)
+        # Unpack the call history using zip and iterate over inputs and outputs
+        inputs, outputs = zip(*[pickle.loads(call_data) for call_data in call_history])
+        print(f"{func.__name__} was called {len(call_history)} times:")
+        for args, result in zip(inputs, outputs):
+            print(f"{func.__name__}(*{args}) -> {result}")
