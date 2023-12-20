@@ -4,7 +4,7 @@ Cache class
 """
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Optional, Callable
 
 
 def decode_utf8(data):
