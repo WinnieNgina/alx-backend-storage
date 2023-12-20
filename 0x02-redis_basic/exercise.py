@@ -8,6 +8,7 @@ from typing import Union, Optional, Callable
 
 
 def decode_utf8(data):
+    """Converts bytes too strings"""
     return data.decode("utf-8")
 
 
