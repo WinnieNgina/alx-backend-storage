@@ -4,8 +4,11 @@ Cache class
 """
 import redis
 import uuid
-from typing import Union
+from typing import Union, Callable
 
+
+def decode_utf8(data):
+    return data.decode("utf-8")
 
 class Cache:
     def __init__(self):
@@ -18,3 +21,22 @@ class Cache:
         key = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
+
+    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float, None]:
+        """Retrieves data from db and calls function if provided"""
+        data = self._redis.get(key)
+        if data is None:
+            return None
+        if fn:
+            return fn(data)
+        else:
+            return data
+
+    def get_str(self, key: str) -> Optional[str]:
+        """Retrieves data as a str from db"""
+        return self.get(key, fn=decode_utf8)
+
+    def get_int(self, key: int) -> Optional[int]:
+        """Retrieves data from db as int"""
+        result self.get(key, fn=int)
+
