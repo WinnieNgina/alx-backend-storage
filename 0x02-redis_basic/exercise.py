@@ -68,3 +68,20 @@ class Cache:
     def get_int(self, key: int) -> Optional[int]:
         """Retrieves data from db as int"""
         return self.get(key, fn=int)
+
+    def replay(method: Callable):
+        """
+        Displays the call history of a Cache class' method.
+        """
+        if method is None or not hasattr(method, "__self__"):
+            return
+        redis_store = getattr(method.__self__, "_redis", None)
+        if not isinstance(redis_store, redis.Redis):
+            return
+        key = method.__qualname__
+        input_key = f"{key}:inputs"
+        output_key = f"{key}:outputs"
+        inputs = redis_store.lrange(input_key, 0, -1)
+        outputs = redis_store.lrange(output_key, 0, -1)
+        for input_args, output in zip(inputs, outputs):
+            print(f"{key}(*{input_args}) -> {output}")
